@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "System",
+    "lib": ["es6", "DOM", "dom.iterable"],
+    "allowJs": true,
+    "outDir": "build",
+    "outFile":"./build/build.js",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "types": ["node", "tampermonkey"],
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*", "apiexamples.js"],
+  "exclude": ["test/**/*.spec.ts"]
+}

@@ -1,0 +1,112 @@
+await fetch("https://us-central1-dreampen-2273f.cloudfunctions.net/createFolder", {
+    "credentials": "include",
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
+        "Accept": "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFiYjI2MzY4YTNkMWExNDg1YmNhNTJiNGY4M2JkYjQ5YjY0ZWM2MmYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiRmxvcmlhbiBTY2hpbmRsZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUdObXl4YXNBVkl6MElmdDlaRkc5eW5tNE5RSjVBR0lBWlZuZUprdkVnVDIwdz1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9kcmVhbXBlbi0yMjczZiIsImF1ZCI6ImRyZWFtcGVuLTIyNzNmIiwiYXV0aF90aW1lIjoxNjgzNDYzNDkzLCJ1c2VyX2lkIjoid2xZWVVNak1Hdk5CVkpzbUFxOTFQZ0NGRlZ4MiIsInN1YiI6IndsWVlVTWpNR3ZOQlZKc21BcTkxUGdDRkZWeDIiLCJpYXQiOjE2ODQwOTU1NzksImV4cCI6MTY4NDA5OTE3OSwiZW1haWwiOiJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTU2NTY4MDgyODc4NDcyODE1NiJdLCJlbWFpbCI6WyJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.pmndcDxZYonb7FADLQK8PHAySvO-qn_Ax80jAxD_lCfQUua4avPHS6rqRhikuczILlfhZv9P2SGTqHA3TTupQtE2oIuNHJTi2NYcttFSxRbYCM2oB43ZJ3b_DoexjRz5MFYS77pwvYVvU25TaAYKdr_ghl3QBRhdTJ8_8MoC6JWDXIN5vQs5h-jO1BvtszKFkSvqpRJe2_bsU_sHFyGWltyvOx5Anw4ZHv96TaBYpMkKnK0Evy0i1itHanlpONOQoW4xVt50QcSHwe3JsDZIFBBFrgInGwQNwoxCZP0OgvxW3gI10pi66aThtO1EATGktXY9xwcJ4Fc-w7ZmN9z1Xg",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "cross-site"
+    },
+    "referrer": "https://pornpen.ai/",
+    "body": "{\"data\":{\"name\":\"testfolder\"}}",
+    "method": "POST",
+    "mode": "cors"
+});
+
+await fetch("https://us-central1-dreampen-2273f.cloudfunctions.net/getFolders", {
+    "credentials": "include",
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
+        "Accept": "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFiYjI2MzY4YTNkMWExNDg1YmNhNTJiNGY4M2JkYjQ5YjY0ZWM2MmYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiRmxvcmlhbiBTY2hpbmRsZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUdObXl4YXNBVkl6MElmdDlaRkc5eW5tNE5RSjVBR0lBWlZuZUprdkVnVDIwdz1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9kcmVhbXBlbi0yMjczZiIsImF1ZCI6ImRyZWFtcGVuLTIyNzNmIiwiYXV0aF90aW1lIjoxNjgzNDYzNDkzLCJ1c2VyX2lkIjoid2xZWVVNak1Hdk5CVkpzbUFxOTFQZ0NGRlZ4MiIsInN1YiI6IndsWVlVTWpNR3ZOQlZKc21BcTkxUGdDRkZWeDIiLCJpYXQiOjE2ODQwOTU1NzksImV4cCI6MTY4NDA5OTE3OSwiZW1haWwiOiJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTU2NTY4MDgyODc4NDcyODE1NiJdLCJlbWFpbCI6WyJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.pmndcDxZYonb7FADLQK8PHAySvO-qn_Ax80jAxD_lCfQUua4avPHS6rqRhikuczILlfhZv9P2SGTqHA3TTupQtE2oIuNHJTi2NYcttFSxRbYCM2oB43ZJ3b_DoexjRz5MFYS77pwvYVvU25TaAYKdr_ghl3QBRhdTJ8_8MoC6JWDXIN5vQs5h-jO1BvtszKFkSvqpRJe2_bsU_sHFyGWltyvOx5Anw4ZHv96TaBYpMkKnK0Evy0i1itHanlpONOQoW4xVt50QcSHwe3JsDZIFBBFrgInGwQNwoxCZP0OgvxW3gI10pi66aThtO1EATGktXY9xwcJ4Fc-w7ZmN9z1Xg",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "cross-site"
+    },
+    "referrer": "https://pornpen.ai/",
+    "body": "{\"data\":null}",
+    "method": "POST",
+    "mode": "cors"
+});
+
+{"result":[{"id":"PLeNXlPGkl","owner_uid":"wlYYUMjMGvNBVJsmAq91PgCFFVx2","name":"testfolder","create_date":{},"thumbnail_url":null}]}
+
+await fetch("https://us-central1-dreampen-2273f.cloudfunctions.net/deleteImagesFromFolder", {
+    "credentials": "include",
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
+        "Accept": "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFiYjI2MzY4YTNkMWExNDg1YmNhNTJiNGY4M2JkYjQ5YjY0ZWM2MmYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiRmxvcmlhbiBTY2hpbmRsZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUdObXl4YXNBVkl6MElmdDlaRkc5eW5tNE5RSjVBR0lBWlZuZUprdkVnVDIwdz1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9kcmVhbXBlbi0yMjczZiIsImF1ZCI6ImRyZWFtcGVuLTIyNzNmIiwiYXV0aF90aW1lIjoxNjgzNDYzNDkzLCJ1c2VyX2lkIjoid2xZWVVNak1Hdk5CVkpzbUFxOTFQZ0NGRlZ4MiIsInN1YiI6IndsWVlVTWpNR3ZOQlZKc21BcTkxUGdDRkZWeDIiLCJpYXQiOjE2ODQwOTU1NzksImV4cCI6MTY4NDA5OTE3OSwiZW1haWwiOiJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTU2NTY4MDgyODc4NDcyODE1NiJdLCJlbWFpbCI6WyJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.pmndcDxZYonb7FADLQK8PHAySvO-qn_Ax80jAxD_lCfQUua4avPHS6rqRhikuczILlfhZv9P2SGTqHA3TTupQtE2oIuNHJTi2NYcttFSxRbYCM2oB43ZJ3b_DoexjRz5MFYS77pwvYVvU25TaAYKdr_ghl3QBRhdTJ8_8MoC6JWDXIN5vQs5h-jO1BvtszKFkSvqpRJe2_bsU_sHFyGWltyvOx5Anw4ZHv96TaBYpMkKnK0Evy0i1itHanlpONOQoW4xVt50QcSHwe3JsDZIFBBFrgInGwQNwoxCZP0OgvxW3gI10pi66aThtO1EATGktXY9xwcJ4Fc-w7ZmN9z1Xg",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "cross-site"
+    },
+    "referrer": "https://pornpen.ai/",
+    "body": "{\"data\":{\"imageIds\":[\"Xbui7KJsXEeImpqAkQ2a\"],\"folderId\":\"PLeNXlPGkl\"}}",
+    "method": "POST",
+    "mode": "cors"
+});
+
+await fetch("https://us-central1-dreampen-2273f.cloudfunctions.net/addImageToFolder", {
+    "credentials": "include",
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
+        "Accept": "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFiYjI2MzY4YTNkMWExNDg1YmNhNTJiNGY4M2JkYjQ5YjY0ZWM2MmYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiRmxvcmlhbiBTY2hpbmRsZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUdObXl4YXNBVkl6MElmdDlaRkc5eW5tNE5RSjVBR0lBWlZuZUprdkVnVDIwdz1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9kcmVhbXBlbi0yMjczZiIsImF1ZCI6ImRyZWFtcGVuLTIyNzNmIiwiYXV0aF90aW1lIjoxNjgzNDYzNDkzLCJ1c2VyX2lkIjoid2xZWVVNak1Hdk5CVkpzbUFxOTFQZ0NGRlZ4MiIsInN1YiI6IndsWVlVTWpNR3ZOQlZKc21BcTkxUGdDRkZWeDIiLCJpYXQiOjE2ODQwOTU1NzksImV4cCI6MTY4NDA5OTE3OSwiZW1haWwiOiJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTU2NTY4MDgyODc4NDcyODE1NiJdLCJlbWFpbCI6WyJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.pmndcDxZYonb7FADLQK8PHAySvO-qn_Ax80jAxD_lCfQUua4avPHS6rqRhikuczILlfhZv9P2SGTqHA3TTupQtE2oIuNHJTi2NYcttFSxRbYCM2oB43ZJ3b_DoexjRz5MFYS77pwvYVvU25TaAYKdr_ghl3QBRhdTJ8_8MoC6JWDXIN5vQs5h-jO1BvtszKFkSvqpRJe2_bsU_sHFyGWltyvOx5Anw4ZHv96TaBYpMkKnK0Evy0i1itHanlpONOQoW4xVt50QcSHwe3JsDZIFBBFrgInGwQNwoxCZP0OgvxW3gI10pi66aThtO1EATGktXY9xwcJ4Fc-w7ZmN9z1Xg",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "cross-site"
+    },
+    "referrer": "https://pornpen.ai/",
+    "body": "{\"data\":{\"imageId\":\"Xbui7KJsXEeImpqAkQ2a\",\"folderId\":\"PLeNXlPGkl\",\"isPrivate\":false}}",
+    "method": "POST",
+    "mode": "cors"
+});
+
+await fetch("https://us-central1-dreampen-2273f.cloudfunctions.net/getImagesInFolder", {
+    "credentials": "include",
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
+        "Accept": "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFiYjI2MzY4YTNkMWExNDg1YmNhNTJiNGY4M2JkYjQ5YjY0ZWM2MmYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiRmxvcmlhbiBTY2hpbmRsZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUdObXl4YXNBVkl6MElmdDlaRkc5eW5tNE5RSjVBR0lBWlZuZUprdkVnVDIwdz1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9kcmVhbXBlbi0yMjczZiIsImF1ZCI6ImRyZWFtcGVuLTIyNzNmIiwiYXV0aF90aW1lIjoxNjgzNDYzNDkzLCJ1c2VyX2lkIjoid2xZWVVNak1Hdk5CVkpzbUFxOTFQZ0NGRlZ4MiIsInN1YiI6IndsWVlVTWpNR3ZOQlZKc21BcTkxUGdDRkZWeDIiLCJpYXQiOjE2ODQwOTU1NzksImV4cCI6MTY4NDA5OTE3OSwiZW1haWwiOiJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTU2NTY4MDgyODc4NDcyODE1NiJdLCJlbWFpbCI6WyJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.pmndcDxZYonb7FADLQK8PHAySvO-qn_Ax80jAxD_lCfQUua4avPHS6rqRhikuczILlfhZv9P2SGTqHA3TTupQtE2oIuNHJTi2NYcttFSxRbYCM2oB43ZJ3b_DoexjRz5MFYS77pwvYVvU25TaAYKdr_ghl3QBRhdTJ8_8MoC6JWDXIN5vQs5h-jO1BvtszKFkSvqpRJe2_bsU_sHFyGWltyvOx5Anw4ZHv96TaBYpMkKnK0Evy0i1itHanlpONOQoW4xVt50QcSHwe3JsDZIFBBFrgInGwQNwoxCZP0OgvxW3gI10pi66aThtO1EATGktXY9xwcJ4Fc-w7ZmN9z1Xg",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "cross-site"
+    },
+    "referrer": "https://pornpen.ai/",
+    "body": "{\"data\":{\"folderId\":\"PLeNXlPGkl\"}}",
+    "method": "POST",
+    "mode": "cors"
+});
+
+{"result":[{"image_id":"Xbui7KJsXEeImpqAkQ2a","image_url":"https://cdn.pornpen.ai/61df29e6-d657-45d7-8209-7ec1963c1b11.jpg","create_date":"2023-05-14T20:48:53.467Z","is_private":false}]}
+
+
+await fetch("https://us-central1-dreampen-2273f.cloudfunctions.net/updateFolder", {
+    "credentials": "include",
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
+        "Accept": "*/*",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFiYjI2MzY4YTNkMWExNDg1YmNhNTJiNGY4M2JkYjQ5YjY0ZWM2MmYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiRmxvcmlhbiBTY2hpbmRsZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUdObXl4YXNBVkl6MElmdDlaRkc5eW5tNE5RSjVBR0lBWlZuZUprdkVnVDIwdz1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9kcmVhbXBlbi0yMjczZiIsImF1ZCI6ImRyZWFtcGVuLTIyNzNmIiwiYXV0aF90aW1lIjoxNjgzNDYzNDkzLCJ1c2VyX2lkIjoid2xZWVVNak1Hdk5CVkpzbUFxOTFQZ0NGRlZ4MiIsInN1YiI6IndsWVlVTWpNR3ZOQlZKc21BcTkxUGdDRkZWeDIiLCJpYXQiOjE2ODQwOTU1NzksImV4cCI6MTY4NDA5OTE3OSwiZW1haWwiOiJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwOTU2NTY4MDgyODc4NDcyODE1NiJdLCJlbWFpbCI6WyJzY2hpbmRsYWJ1YUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.pmndcDxZYonb7FADLQK8PHAySvO-qn_Ax80jAxD_lCfQUua4avPHS6rqRhikuczILlfhZv9P2SGTqHA3TTupQtE2oIuNHJTi2NYcttFSxRbYCM2oB43ZJ3b_DoexjRz5MFYS77pwvYVvU25TaAYKdr_ghl3QBRhdTJ8_8MoC6JWDXIN5vQs5h-jO1BvtszKFkSvqpRJe2_bsU_sHFyGWltyvOx5Anw4ZHv96TaBYpMkKnK0Evy0i1itHanlpONOQoW4xVt50QcSHwe3JsDZIFBBFrgInGwQNwoxCZP0OgvxW3gI10pi66aThtO1EATGktXY9xwcJ4Fc-w7ZmN9z1Xg",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "cross-site"
+    },
+    "referrer": "https://pornpen.ai/",
+    "body": "{\"data\":{\"folderId\":\"PLeNXlPGkl\",\"name\":\"testfolderinho\"}}",
+    "method": "POST",
+    "mode": "cors"
+});

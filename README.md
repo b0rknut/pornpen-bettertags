@@ -15,3 +15,5 @@ This is a community mod for providing better user experience on pornpen.ai. it's
 ## Contributing
 
 Join the effort! Hop over to the [pornpen.ai discord channel](https://discord.com/invite/cWX7rhzcVz) and message @b0rknut if you've any questions.
+
+To set up the local development environment, install nodejs and run `npm i` in the project root folder. Run `npm run watch`, and start coding :) You'll have to copy over the out.js file into the tampermonkey editor everytime you make changes, I'm not aware of a way to make the developer experience smoother. If you know a better way, be sure to let me know!

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pornpen.ai better tags
 // @namespace    pornpen.ai
-// @version      1.5.1
+// @version      1.6.0
 // @description  better make screen :)
 // @author       b0rknut
 // @match        https://pornpen.ai/*
@@ -352,7 +352,8 @@
     allFolders: [],
     authorizationHeader: "",
     lastGeneratedSelectedTags: [],
-    scrollbarSize: 16
+    scrollbarSize: 16,
+    isMobile: false
   });
   var getAppState = () => {
     const anyWindow = unsafeWindow;
@@ -369,7 +370,8 @@
   var USER_DEFINED_TAGS_SELECTOR = "div.border-purple-500";
   var ON_MOBILE = "@media screen and (max-width: 768px)";
   var COLORS = {
-    ui: "rgb(12, 18, 29)"
+    ui: "rgb(12, 18, 29)",
+    uiLight: "rgb(67, 73, 85)"
   };
   var styles = `
 body, #root {
@@ -378,6 +380,12 @@ body, #root {
 
 img {
     border-radius: 0.5rem;
+}
+
+${ON_MOBILE} {
+    img {
+        border-radius: 0;
+    }
 }
 
 .mobile-only {
@@ -436,7 +444,7 @@ ${ON_MOBILE} {
 /* where the main images are located */
 ${ON_MOBILE} {
     *[class="w-full md:w-fit md:flex-none md:min-w-[512px]"] {
-        margin-top: 6.5rem; /* 2rem top bar, 4.5 rem generatedImages */
+        margin-top: 7rem; /* 3rem top bar, 4 rem generatedImages */
     }
 
     /* some weird container inside */
@@ -589,7 +597,7 @@ ${ON_MOBILE} {
     display: inline-block;
     padding: 0.2rem 0.6rem;
     margin: 1px;
-    background-color: #FFF2;
+    background-color: rgb(44, 50, 59);
     border-radius: 0.5rem;
     cursor: pointer;
 }
@@ -601,6 +609,16 @@ ${ON_MOBILE} {
     border-radius: 0.5rem;
     overflow: hidden;
     background: #0002;
+}
+
+${ON_MOBILE} {
+    .genericUiElement {
+        border-radius: 0;
+    }
+
+    *[class="relative rounded-lg bg-white shadow dark:bg-gray-700"] {
+        top: 15rem;
+    }
 }
 
 .scrollbar-measure {
@@ -1062,26 +1080,44 @@ ${ON_MOBILE} {
   }))();
 
   // src/ppai/imageTags.ts
-  var tagCache = /* @__PURE__ */ new Map();
+  var tagCacheMap = /* @__PURE__ */ new Map();
+  var tagCache = (id) => __async(void 0, null, function* () {
+    if (!tagCacheMap.has(id)) {
+      tagCacheMap.set(id, "STALE");
+      const imageTags2 = yield fetchAllTagsForImage(id);
+      tagCacheMap.set(id, imageTags2);
+    }
+    const result = tagCacheMap.get(id);
+    return {
+      stale: result === "STALE",
+      data: result === "STALE" ? [] : result
+    };
+  });
+  var setImageTags = (id, tags) => {
+    tagCacheMap.set(id, tags);
+  };
   var renderImageTags = (id) => __async(void 0, null, function* () {
-    var _a, _b;
     const container = $(A_TAG_SELECTOR);
     if (!container)
       return;
-    let target = (_a = container.parentNode) == null ? void 0 : _a.querySelector(".imageTags");
+    const isMobile = getAppState().isMobile;
+    const targetContainer = isMobile ? container : container.parentNode;
+    let target = targetContainer == null ? void 0 : targetContainer.querySelector(".imageTags");
     if (!target) {
       target = document.createElement("div");
       target.classList.add("imageTags");
-      (_b = container.parentNode) == null ? void 0 : _b.appendChild(target);
-    }
-    target.innerHTML = "";
-    try {
-      if (!tagCache.has(id)) {
-        const imageTags3 = yield fetchAllTagsForImage(id);
-        tagCache.set(id, imageTags3);
+      if (isMobile) {
+        target.classList.add("hidden");
       }
-      const imageTags2 = tagCache.get(id);
-      for (const tag of imageTags2) {
+      targetContainer == null ? void 0 : targetContainer.appendChild(target);
+    }
+    try {
+      target.innerHTML = "";
+      const { stale, data } = yield tagCache(id);
+      if (stale)
+        return;
+      target.innerHTML = "";
+      for (const tag of data) {
         const tagNode = createSmallTag(tag);
         tagNode.addEventListener("click", () => {
           toggleTag(getAppState(), tag);
@@ -1092,15 +1128,32 @@ ${ON_MOBILE} {
       console.error(e);
     }
   });
-  var setImageTags = (id, tags) => {
-    tagCache.set(id, tags);
-  };
-  var A_TAG_SELECTOR = '.w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/view/"]';
   registerStyles(`
   /* rating container */
   ${ON_MOBILE} {
     .flex.justify-center.flex-col.items-center.mt-4, .flex.justify-center.flex-col.items-center.mb-4 {
       display: none;
+    }
+
+    .imageTags {
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      flex-wrap: wrap;
+      padding-top: 2rem;
+      background: linear-gradient(180deg, rgba(2,0,36,0) 0%, rgba(0,0,0,0.8) 35%, rgba(0,0,0,0.8) 100%);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      border: none;
+      pointer-events: auto;
+      opacity: 1;
+      transition: opacity 0.08s ease-in-out;
+    }
+
+    .imageTags.hidden {
+      opacity: 0;
     }
   }
 `);
@@ -1133,7 +1186,7 @@ ${ON_MOBILE} {
   }))();
 
   // src/ppai/imageListener.ts
-  var A_TAG_SELECTOR2 = '.w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/view/"], .w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/private/"]';
+  var A_TAG_SELECTOR = '.w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/view/"], .w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/private/"]';
   var render = () => {
     const container = $("#generatedImages");
     if (!container)
@@ -1145,10 +1198,10 @@ ${ON_MOBILE} {
       imageNode.src = image.url;
       imageNode.addEventListener("click", () => {
         var _a;
-        const linkNode = $(`${A_TAG_SELECTOR2}`);
+        const linkNode = $(`${A_TAG_SELECTOR}`);
         if (!linkNode)
           return;
-        linkNode.setAttribute("href", `/view/${image.id}`);
+        linkNode.setAttribute("href", `/${image.id}`);
         (_a = linkNode.querySelector("img")) == null ? void 0 : _a.setAttribute("src", image.url);
         imageTags.updateData(image.id);
       });
@@ -1156,6 +1209,11 @@ ${ON_MOBILE} {
     }
   };
   registerStyles(`
+/* the thing that is shown while an image is generating */
+.mb-8.flex.justify-center.items-center.flex-col.max-w-lg .text-white.text-center.mt-4.w-full {
+  margin-top: 0;
+}
+
 /* imageListener */
 #generatedImageContainer {
     border: 1px solid #FFF2;
@@ -1200,27 +1258,32 @@ ${ON_MOBILE} {
     display: inline-block;
 }
 
+.imageLink {
+  position: relative;
+}
+
 ${ON_MOBILE} {
   #generatedImageContainer {
     margin-bottom: 0rem;
     margin-top: 0rem;
     position: fixed;
-    top: 2rem;
+    top: 3rem; /* topHeader height */
     width: 100vw;
     border-radius: 0;
     z-index: 100;
   }
 
   #generatedImages {
-    padding: 0.25rem;
+    padding: 0rem;
     min-height: 4rem;
     display: flex; 
+    background-color: ${COLORS.ui};
   }
   
   .generatedImage {
     width: 4rem;
     height: 4rem;
-    margin: 0 0.25rem 0 0.25rem;
+    margin: 0 1px 0 0;
   }
 
   .generatedImage:first-child {
@@ -1230,7 +1293,24 @@ ${ON_MOBILE} {
   .generatedImage:last-child {
     margin-right: 0rem;
   }
-  
+
+  /* image */ 
+  .text-white.text-center.underline.m-auto {
+    border: none;
+  }
+
+  /* save and edit buttons */
+  .flex.flex-col.overflow-auto.mb-8.justify-center .mt-2 {
+    border: none;
+    margin-top: 0;
+    padding: 0.25rem;
+    pointer-events: auto;
+  }
+
+  .mb-4 {
+    margin-bottom: 0;
+  }
+
 }
 
 `);
@@ -1250,12 +1330,25 @@ ${ON_MOBILE} {
     name: "imageListener",
     isInjected: () => {
       var _a, _b, _c, _d;
-      const images = $$(A_TAG_SELECTOR2);
+      const images = $$(A_TAG_SELECTOR);
       let updateNecessary = false;
-      for (const imageNode of images) {
-        (_a = imageNode.parentElement) == null ? void 0 : _a.classList.add("genericUiElement");
-        const id = (_b = imageNode.getAttribute("href")) == null ? void 0 : _b.split("/")[2];
-        const imageUrl = (_c = imageNode.querySelector("img")) == null ? void 0 : _c.getAttribute("src");
+      for (const imageContainer of images) {
+        (_a = imageContainer.parentElement) == null ? void 0 : _a.classList.add("genericUiElement");
+        const id = (_b = imageContainer.getAttribute("href")) == null ? void 0 : _b.split("/").slice(1).join("/");
+        imageContainer.classList.add("imageLink");
+        const state = getAppState();
+        if (state.isMobile) {
+        }
+        imageContainer.addEventListener("click", (e) => {
+          var _a2;
+          if (state.isMobile) {
+            (_a2 = $(".imageTags", imageContainer)) == null ? void 0 : _a2.classList.toggle("hidden");
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            return false;
+          }
+        });
+        const imageUrl = (_c = imageContainer.querySelector("img")) == null ? void 0 : _c.getAttribute("src");
         if (!id || !imageUrl)
           continue;
         if (!generatedImages.has(id)) {
@@ -1616,7 +1709,45 @@ ${TOP_HEADER_SELECTOR} {
     width: 100vw;
     background: #000;
     margin-bottom: 1rem;
-    height: 2rem;
+    height: 3rem;
+    align-items: center;
+}
+
+${TOP_HEADER_SELECTOR} .font-bold.flex.justify-between.w-full {
+  width: auto;
+  flex-grow: 1;
+}
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: #EEE;
+  color: #333;
+  box-shadow: 0 0 1rem black;
+  z-index: 1000;
+  width: 10rem;
+  display: flex;
+  align-items: center;
+  transition: left 0.15s;
+}
+
+#sidebar.sidebarHidden {
+  left: -10rem;
+  box-shadow: none;
+}
+
+#sidebar ul {
+  display: block;
+}
+
+#sidebar ul li {
+  padding: 0.5rem;
+  padding-left: 1rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  display: block;
 }
 
 ${ON_MOBILE} {
@@ -1628,25 +1759,74 @@ ${ON_MOBILE} {
     z-index: 100;
     background: ${COLORS.ui};
   } 
+  ${TOP_HEADER_SELECTOR} .flex.underline {
+    display: none;
+  }
 }
 
 `);
+  var SIDEBAR_MARKUP = `
+  <div id="sidebar" class="sidebarHidden">
+    <ul>
+      <li><a href="/make">Make</a></li>
+      <li><a href="/feed">Feed</a></li>
+      <li><a href="/search">Search</a></li>
+      <li><a href="/tags">Tags</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/profile">Profile</a></li>
+    </ul>
+  </div>
+`;
+  var HAMBURGER_MARKUP = `
+  <div id="hamburger" class="flex-col justify-center items-center p-2">
+    <div class="w-6 h-1 bg-white mt-0.5 mb-1"></div>
+    <div class="w-6 h-1 bg-white mb-1"></div>
+    <div class="w-6 h-1 bg-white mb-0.5"></div>
+  </div>
+`;
   var topHeader = (() => ({
     name: "topHeader",
     isInjected: () => !$(`${TOP_HEADER_SELECTOR} > ${MENU_SELECTOR}`),
     shouldBeInjected: () => true,
     inject: () => {
-      var _a, _b, _c;
+      var _a;
       const menu = $(`${TOP_HEADER_SELECTOR} > ${MENU_SELECTOR}`);
-      if (!menu || !((_b = (_a = menu.parentNode) == null ? void 0 : _a.firstChild) == null ? void 0 : _b.firstChild))
+      const menuParent = menu == null ? void 0 : menu.parentNode;
+      if (!menu || !menuParent || !((_a = menuParent.firstChild) == null ? void 0 : _a.firstChild))
         return;
-      (_c = menu.parentNode) == null ? void 0 : _c.firstChild.insertBefore(
+      menuParent.firstChild.insertBefore(
         menu,
-        menu.parentNode.firstChild.firstChild.nextSibling
+        menuParent.firstChild.firstChild.nextSibling
       );
-      const pp = menu.querySelector("a");
+      const hamburger = $("#hamburger");
+      if (!hamburger) {
+        menuParent.insertAdjacentHTML(
+          "afterbegin",
+          HAMBURGER_MARKUP
+        );
+        $("#hamburger").addEventListener("click", (e) => {
+          e.stopPropagation();
+          $("#sidebar").classList.toggle("sidebarHidden");
+        });
+      }
+      const pp = $(TOP_HEADER_SELECTOR).querySelector("a");
       if (pp)
         pp.innerText = pp.innerText.replace("pornpen", "pp");
+      let sidebar = $("#sidebar");
+      if (!sidebar) {
+        document.body.insertAdjacentHTML("afterend", SIDEBAR_MARKUP);
+        sidebar = $("#sidebar");
+        sidebar.addEventListener(
+          "click",
+          (e) => {
+            e.stopPropagation();
+          },
+          true
+        );
+        document.body.addEventListener("click", (e) => {
+          sidebar.classList.add("sidebarHidden");
+        });
+      }
     },
     uninject: () => {
     },
@@ -1677,6 +1857,17 @@ ${ON_MOBILE} {
       state.allTags = data;
     });
     unsafeWindow.fetchAllTagsForImage = fetchAllTagsForImage;
+    const onWindowResize = () => {
+      const isMobile = window.innerWidth < 768;
+      if (isMobile !== state.isMobile) {
+        state.isMobile = isMobile;
+        log(
+          isMobile ? "Mobile breakpoint detected" : "Desktop breakpoint detected"
+        );
+      }
+    };
+    window.addEventListener("resize", onWindowResize);
+    onWindowResize();
     state.scrollbarSize = getScrollbarWidth();
     log("G'day mates!");
     [

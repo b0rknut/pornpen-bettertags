@@ -9,6 +9,7 @@ export type AppState = {
   authorizationHeader: string;
   lastGeneratedSelectedTags: string[];
   scrollbarSize: number;
+  isMobile: boolean;
 };
 
 export const initialAppState = (): AppState => ({
@@ -20,6 +21,7 @@ export const initialAppState = (): AppState => ({
   authorizationHeader: '',
   lastGeneratedSelectedTags: [],
   scrollbarSize: 16,
+  isMobile: false,
 });
 
 export const getAppState = (): AppState => {

@@ -43,6 +43,18 @@ import LZString from './util/lzstring';
   // });
   (unsafeWindow as any).fetchAllTagsForImage = fetchAllTagsForImage;
 
+  const onWindowResize = () => {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile !== state.isMobile) {
+      state.isMobile = isMobile;
+      log(
+        isMobile ? 'Mobile breakpoint detected' : 'Desktop breakpoint detected',
+      );
+    }
+  };
+  window.addEventListener('resize', onWindowResize);
+  onWindowResize();
+
   state.scrollbarSize = getScrollbarWidth();
 
   log("G'day mates!");

@@ -10,7 +10,7 @@ type GeneratedImageData = {
   url: string;
 };
 
-const A_TAG_SELECTOR =
+export const A_TAG_SELECTOR =
   '.w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/view/"], .w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/private/"]';
 
 const render = () => {
@@ -26,7 +26,7 @@ const render = () => {
     imageNode.addEventListener('click', () => {
       const linkNode = $(`${A_TAG_SELECTOR}`);
       if (!linkNode) return;
-      linkNode.setAttribute('href', `/view/${image.id}`);
+      linkNode.setAttribute('href', `/${image.id}`);
       linkNode.querySelector('img')?.setAttribute('src', image.url);
       imageTags.updateData(image.id);
     });
@@ -36,6 +36,11 @@ const render = () => {
 };
 
 registerStyles(`
+/* the thing that is shown while an image is generating */
+.mb-8.flex.justify-center.items-center.flex-col.max-w-lg .text-white.text-center.mt-4.w-full {
+  margin-top: 0;
+}
+
 /* imageListener */
 #generatedImageContainer {
     border: 1px solid #FFF2;
@@ -80,27 +85,32 @@ registerStyles(`
     display: inline-block;
 }
 
+.imageLink {
+  position: relative;
+}
+
 ${ON_MOBILE} {
   #generatedImageContainer {
     margin-bottom: 0rem;
     margin-top: 0rem;
     position: fixed;
-    top: 2rem;
+    top: 3rem; /* topHeader height */
     width: 100vw;
     border-radius: 0;
     z-index: 100;
   }
 
   #generatedImages {
-    padding: 0.25rem;
+    padding: 0rem;
     min-height: 4rem;
     display: flex; 
+    background-color: ${COLORS.ui};
   }
   
   .generatedImage {
     width: 4rem;
     height: 4rem;
-    margin: 0 0.25rem 0 0.25rem;
+    margin: 0 1px 0 0;
   }
 
   .generatedImage:first-child {
@@ -110,7 +120,24 @@ ${ON_MOBILE} {
   .generatedImage:last-child {
     margin-right: 0rem;
   }
-  
+
+  /* image */ 
+  .text-white.text-center.underline.m-auto {
+    border: none;
+  }
+
+  /* save and edit buttons */
+  .flex.flex-col.overflow-auto.mb-8.justify-center .mt-2 {
+    border: none;
+    margin-top: 0;
+    padding: 0.25rem;
+    pointer-events: auto;
+  }
+
+  .mb-4 {
+    margin-bottom: 0;
+  }
+
 }
 
 `);
@@ -135,10 +162,30 @@ export const imageListener: Injectable<never> = (() => ({
     // have been generated (can be multiple!)
     const images = $$(A_TAG_SELECTOR);
     let updateNecessary = false;
-    for (const imageNode of images) {
-      imageNode.parentElement?.classList.add('genericUiElement');
-      const id = imageNode.getAttribute('href')?.split('/')[2];
-      const imageUrl = imageNode.querySelector('img')?.getAttribute('src');
+    for (const imageContainer of images) {
+      imageContainer.parentElement?.classList.add('genericUiElement');
+      const id = imageContainer
+        .getAttribute('href')
+        ?.split('/')
+        .slice(1)
+        .join('/');
+      imageContainer.classList.add('imageLink');
+
+      const state = getAppState();
+      if (state.isMobile) {
+        //imageContainer.style.pointerEvents = 'none';
+      }
+
+      imageContainer.addEventListener('click', (e) => {
+        if (state.isMobile) {
+          $('.imageTags', imageContainer)?.classList.toggle('hidden');
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      const imageUrl = imageContainer.querySelector('img')?.getAttribute('src');
       if (!id || !imageUrl) continue;
       if (!generatedImages.has(id)) {
         generatedImages.set(id, { id, url: imageUrl });

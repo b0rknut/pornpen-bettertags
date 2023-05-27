@@ -10,6 +10,7 @@ export const ON_MOBILE = '@media screen and (max-width: 768px)';
 
 export const COLORS = {
   ui: 'rgb(12, 18, 29)',
+  uiLight: 'rgb(67, 73, 85)',
 };
 
 export let styles = `
@@ -19,6 +20,12 @@ body, #root {
 
 img {
     border-radius: 0.5rem;
+}
+
+${ON_MOBILE} {
+    img {
+        border-radius: 0;
+    }
 }
 
 .mobile-only {
@@ -77,7 +84,7 @@ ${ON_MOBILE} {
 /* where the main images are located */
 ${ON_MOBILE} {
     *[class="w-full md:w-fit md:flex-none md:min-w-[512px]"] {
-        margin-top: 6.5rem; /* 2rem top bar, 4.5 rem generatedImages */
+        margin-top: 7rem; /* 3rem top bar, 4 rem generatedImages */
     }
 
     /* some weird container inside */
@@ -230,7 +237,7 @@ ${ON_MOBILE} {
     display: inline-block;
     padding: 0.2rem 0.6rem;
     margin: 1px;
-    background-color: #FFF2;
+    background-color: rgb(44, 50, 59);
     border-radius: 0.5rem;
     cursor: pointer;
 }
@@ -242,6 +249,16 @@ ${ON_MOBILE} {
     border-radius: 0.5rem;
     overflow: hidden;
     background: #0002;
+}
+
+${ON_MOBILE} {
+    .genericUiElement {
+        border-radius: 0;
+    }
+
+    *[class="relative rounded-lg bg-white shadow dark:bg-gray-700"] {
+        top: 15rem;
+    }
 }
 
 .scrollbar-measure {

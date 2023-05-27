@@ -14,4 +14,4 @@ This is a community mod for providing better user experience on pornpen.ai. it's
 
 ## Contributing
 
-You're free to join the effort! Come over to the [pornpen.ai discord channel](https://discord.com/invite/cWX7rhzcVz) and hit up @b0rknut if you've any questions.
+Join the effort! Hop over to the [pornpen.ai discord channel](https://discord.com/invite/cWX7rhzcVz) and message @b0rknut if you've any questions.

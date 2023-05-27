@@ -11,7 +11,7 @@ type GeneratedImageData = {
 };
 
 const A_TAG_SELECTOR =
-  '.w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/view/"]';
+  '.w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/view/"], .w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/private/"]';
 
 const render = () => {
   const container = $('#generatedImages');

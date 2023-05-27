@@ -1,43 +1,17 @@
-# 🧰 Simple TypeScript Starter | 2023
+# Pornpen.ai better tags
 
-> We talk about a lot of **advanced Node.js and TypeScript** concepts on [the blog](https://khalilstemmler.com), particularly focused around Domain-Driven Design and large-scale enterprise application patterns. However, I received a few emails from readers that were interested in seeing what a basic TypeScript starter project looks like. So I've put together just that.
+This is a community mod for providing better user experience on pornpen.ai. it's very much work in progress, use at your own risk!
 
-### Features
+![sample image](./image.png)
 
-- Minimal
-- TypeScript v4
-- Testing with Jest
-- Linting with Eslint and Prettier
-- Pre-commit hooks with Husky
-- VS Code debugger scripts
-- Local development with Nodemon
+## Installation instructions
 
-### Scripts
+1. Install the [Tampermonkey](https://www.tampermonkey.net/) extensions for your browser of choice. On Desktop, Chrome or Firefox; on Android, Firefox or Kiwi Browser.
+2. Open the extension, and add a new user script.
+3. Delete the placeholder script, and copy the contents from [build/out.js](./build/out.js) from this repository in instead.
+4. Press save.
+5. Reload pornpen, enjoy!
 
-#### `npm run start:dev`
+## Contributing
 
-Starts the application in development using `nodemon` and `ts-node` to do hot reloading.
-
-#### `npm run start`
-
-Starts the app in production by first building the project with `npm run build`, and then executing the compiled JavaScript at `build/index.js`.
-
-#### `npm run build`
-
-Builds the app at `build`, cleaning the folder first.
-
-#### `npm run test`
-
-Runs the `jest` tests once.
-
-#### `npm run test:dev`
-
-Run the `jest` tests in watch mode, waiting for file changes.
-
-#### `npm run prettier-format`
-
-Format your code.
-
-#### `npm run prettier-watch`
-
-Format your code in watch mode, waiting for file changes.
+You're free to join the effort! Come over to the [pornpen.ai discord channel](https://discord.com/invite/cWX7rhzcVz) and hit up @b0rknut if you've any questions.

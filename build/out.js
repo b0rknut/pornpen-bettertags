@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pornpen.ai better tags
 // @namespace    pornpen.ai
-// @version      1.6.0
+// @version      1.6.1
 // @description  better make screen :)
 // @author       b0rknut
 // @match        https://pornpen.ai/*
@@ -508,14 +508,18 @@ ${ON_MOBILE} {
     left: 0;
 }
 
+.mb-4 > .ml-4.font-bold.text-white+.ml-4.text-white {
+    display: none;
+}
+
 /* tag group content */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
     display: grid;
     grid: repeat(12, auto) / auto-flow;
 }
 
 ${ON_MOBILE} {
-    .mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap {
+    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
         grid: repeat(6, auto) / auto-flow;
     }
 
@@ -525,7 +529,7 @@ ${ON_MOBILE} {
 }
 
 /* individual tag */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap > div {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div {
 
     flex: 1;
 
@@ -547,19 +551,19 @@ ${ON_MOBILE} {
 }
 
 /* individual tag: selected */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap > div.bg-green-700 {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-green-700 {
     background: rgb(144 97 249);
     color: white;
 }
 
 /* individual tag: non-builtin */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap > div.border-purple-500 {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.border-purple-500 {
     background: #FF888822;
 }
 
 
 /* individual tag: non-builtin: selected */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap > div.bg-purple-500 {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-purple-500 {
     background: rgb(144 97 249);
     color: white;
 }
@@ -797,7 +801,9 @@ ${ON_MOBILE} {
       selectAllButton.classList.add("categorySelectorButton");
       selectAllButton.textContent = "Select All";
       selectAllButton.addEventListener("click", () => {
-        for (const checkbox of $$('input[type="checkbox"]')) {
+        for (const checkbox of $$(
+          '#categorySelector input[type="checkbox"]'
+        )) {
           checkbox.checked = true;
           checkbox.dispatchEvent(new Event("change"));
         }
@@ -806,7 +812,9 @@ ${ON_MOBILE} {
       deselectAllButton.classList.add("categorySelectorButton");
       deselectAllButton.textContent = "Deselect All";
       deselectAllButton.addEventListener("click", () => {
-        for (const checkbox of $$('input[type="checkbox"]')) {
+        for (const checkbox of $$(
+          '#categorySelector input[type="checkbox"]'
+        )) {
           checkbox.checked = false;
           checkbox.dispatchEvent(new Event("change"));
         }
@@ -1486,7 +1494,8 @@ ${ON_MOBILE} {
   var STICKY_CONTAINER_SELECTOR = ".sticky.bottom-0.p-4.z-50.flex.justify-center.items-center.flex-col.pointer-events-none";
   var TOOLBAR_DESTINATION_SELECTOR = ".flex.flex-col-reverse.min-h-screen>.grow.px-4";
   var GENERATOR_AND_RATIO_SELECTOR = ".flex.flex-col-reverse.min-h-screen>.grow.px-4>.flex.flex-row";
-  var CLEAR_TAGS_AND_COPY_TAGS_SELECTOR = ".flex.flex-col-reverse.min-h-screen>.grow.px-4>.mb-4";
+  var CLEAR_TAGS_AND_COPY_TAGS_SELECTOR = ".flex.flex-col-reverse.min-h-screen>.grow.px-4>div.mb-4";
+  var POSE_BUTTON_SELECTOR = ".flex.flex-col-reverse.min-h-screen>.grow.px-4>.bg-orange-500";
   registerStyles(`
 /* toolbar */
 .toolbar {
@@ -1563,14 +1572,17 @@ ${ON_MOBILE} {
       const clearTagsAndCopyTags = $(CLEAR_TAGS_AND_COPY_TAGS_SELECTOR);
       const gradientButton = $(GRADIENT_BUTTON_SELECTOR2);
       const privateMode = $(PRIVATE_MODE_SWITCH_SELECTOR);
-      if (!destination || !generatorAndRatio || !clearTagsAndCopyTags || !gradientButton || !privateMode)
+      const poseButton = $(POSE_BUTTON_SELECTOR);
+      if (!destination || !generatorAndRatio || !clearTagsAndCopyTags || !gradientButton || !privateMode || !poseButton)
         return;
+      console.log("clearcopy", clearTagsAndCopyTags);
       const container = document.createElement("div");
       container.classList.add("toolbar");
       container.appendChild(gradientButton);
       [
         ...$$("select", generatorAndRatio),
-        ...clearTagsAndCopyTags.children
+        ...clearTagsAndCopyTags.children,
+        poseButton
       ].forEach((child) => {
         container.appendChild(child);
       });
@@ -1578,10 +1590,12 @@ ${ON_MOBILE} {
       queryAndDeleteAll(STICKY_CONTAINER_SELECTOR);
       queryAndDeleteAll(CLEAR_TAGS_AND_COPY_TAGS_SELECTOR);
       queryAndDeleteAll(GENERATOR_AND_RATIO_SELECTOR);
+      console.log("container", container);
       (_a = container.children[2]) == null ? void 0 : _a.classList.add("desktop-only");
       (_b = container.children[3]) == null ? void 0 : _b.classList.add("desktop-only");
       (_c = container.children[4]) == null ? void 0 : _c.classList.add("desktop-only");
-      container.children[5].querySelector("span").innerText = "Private";
+      if (container.children[6])
+        container.children[6].querySelector("span").innerText = "Private";
       container.appendChild(container.querySelector(".GradientButton"));
       destination.insertBefore(container, destination.firstChild);
     },

@@ -13,7 +13,9 @@ const TOOLBAR_DESTINATION_SELECTOR =
 const GENERATOR_AND_RATIO_SELECTOR =
   '.flex.flex-col-reverse.min-h-screen>.grow.px-4>.flex.flex-row';
 const CLEAR_TAGS_AND_COPY_TAGS_SELECTOR =
-  '.flex.flex-col-reverse.min-h-screen>.grow.px-4>.mb-4';
+  '.flex.flex-col-reverse.min-h-screen>.grow.px-4>div.mb-4';
+const POSE_BUTTON_SELECTOR =
+  '.flex.flex-col-reverse.min-h-screen>.grow.px-4>.bg-orange-500';
 
 registerStyles(`
 /* toolbar */
@@ -91,15 +93,19 @@ export const toolbar: Injectable<never> = (() => ({
     const clearTagsAndCopyTags = $(CLEAR_TAGS_AND_COPY_TAGS_SELECTOR);
     const gradientButton = $(GRADIENT_BUTTON_SELECTOR);
     const privateMode = $(PRIVATE_MODE_SWITCH_SELECTOR);
+    const poseButton = $(POSE_BUTTON_SELECTOR);
 
     if (
       !destination ||
       !generatorAndRatio ||
       !clearTagsAndCopyTags ||
       !gradientButton ||
-      !privateMode
+      !privateMode ||
+      !poseButton
     )
       return;
+
+    console.log('clearcopy', clearTagsAndCopyTags);
 
     const container = document.createElement('div');
     container.classList.add('toolbar');
@@ -108,6 +114,7 @@ export const toolbar: Injectable<never> = (() => ({
     [
       ...$$('select', generatorAndRatio),
       ...clearTagsAndCopyTags.children,
+      poseButton,
     ].forEach((child) => {
       container.appendChild(child);
     });
@@ -117,6 +124,8 @@ export const toolbar: Injectable<never> = (() => ({
     queryAndDeleteAll(CLEAR_TAGS_AND_COPY_TAGS_SELECTOR);
     queryAndDeleteAll(GENERATOR_AND_RATIO_SELECTOR);
 
+    console.log('container', container);
+
     // ratio
     container.children[2]?.classList.add('desktop-only');
     // clear tags
@@ -124,8 +133,9 @@ export const toolbar: Injectable<never> = (() => ({
     // copy tags
     container.children[4]?.classList.add('desktop-only');
 
-    (container.children[5].querySelector('span') as HTMLElement).innerText =
-      'Private';
+    if (container.children[6])
+      (container.children[6].querySelector('span') as HTMLElement).innerText =
+        'Private';
 
     // move generate button to the right for easier thumb access
     container.appendChild(container.querySelector('.GradientButton')!);

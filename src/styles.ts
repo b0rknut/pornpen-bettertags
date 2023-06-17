@@ -148,14 +148,18 @@ ${ON_MOBILE} {
     left: 0;
 }
 
+.mb-4 > .ml-4.font-bold.text-white+.ml-4.text-white {
+    display: none;
+}
+
 /* tag group content */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
     display: grid;
     grid: repeat(12, auto) / auto-flow;
 }
 
 ${ON_MOBILE} {
-    .mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap {
+    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
         grid: repeat(6, auto) / auto-flow;
     }
 
@@ -165,7 +169,7 @@ ${ON_MOBILE} {
 }
 
 /* individual tag */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap > div {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div {
 
     flex: 1;
 
@@ -187,19 +191,19 @@ ${ON_MOBILE} {
 }
 
 /* individual tag: selected */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap > div.bg-green-700 {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-green-700 {
     background: rgb(144 97 249);
     color: white;
 }
 
 /* individual tag: non-builtin */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap > div.border-purple-500 {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.border-purple-500 {
     background: #FF888822;
 }
 
 
 /* individual tag: non-builtin: selected */
-.mb-4 > .ml-4.font-bold.text-white+.flex.col.flex-wrap > div.bg-purple-500 {
+.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-purple-500 {
     background: rgb(144 97 249);
     color: white;
 }

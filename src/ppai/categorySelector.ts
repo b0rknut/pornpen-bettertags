@@ -151,7 +151,9 @@ export const categorySelector: Injectable<never> = (() => ({
     selectAllButton.classList.add('categorySelectorButton');
     selectAllButton.textContent = 'Select All';
     selectAllButton.addEventListener('click', () => {
-      for (const checkbox of $$<HTMLInputElement>('input[type="checkbox"]')) {
+      for (const checkbox of $$<HTMLInputElement>(
+        '#categorySelector input[type="checkbox"]',
+      )) {
         checkbox.checked = true;
         checkbox.dispatchEvent(new Event('change'));
       }
@@ -161,7 +163,9 @@ export const categorySelector: Injectable<never> = (() => ({
     deselectAllButton.classList.add('categorySelectorButton');
     deselectAllButton.textContent = 'Deselect All';
     deselectAllButton.addEventListener('click', () => {
-      for (const checkbox of $$<HTMLInputElement>('input[type="checkbox"]')) {
+      for (const checkbox of $$<HTMLInputElement>(
+        '#categorySelector input[type="checkbox"]',
+      )) {
         checkbox.checked = false;
         checkbox.dispatchEvent(new Event('change'));
       }

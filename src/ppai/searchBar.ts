@@ -1,4 +1,4 @@
-import { TABLIST_SELECTOR } from '../styles';
+import { ON_MOBILE, TABLIST_SELECTOR, registerStyles } from '../styles';
 import { Injectable, forceReinject } from '../util/dom/injectable';
 import { $ } from '../util/dom/querySelector';
 import { AppState, getAppState } from './appState';
@@ -15,15 +15,33 @@ export type TooltipInfo = {
 };
 
 const SEARCHBAR_MARKUP = `
-<div id="searchBarContainer" style="display: flex; width:100%">
+<div id="searchBarContainer">
     <input class="searchBar" placeholder="Search..." style="color:white; background: #FFF1; border: 1px solid #FFF2; flex-grow: 1; margin:0; padding:0.5rem; border-top-left-radius:0.5rem;"/><button style="background-color: #FFF1; border: 1px solid #FFF2; border-left: none; border-top-right-radius:0.5rem; padding:0.5rem 0.8rem;">❌</button>
 </div>
 `;
 
+registerStyles(`
+  /* searchBar */
+  #searchBarContainer {
+    width: 100%;
+    display: flex;
+  }
+
+  ${ON_MOBILE} {
+    #searchBarContainer {
+      display: none;
+    }
+  }
+`);
+
 export const search = (state: AppState, value: string) => {
   state.allTagNodes.forEach((tagNode) => {
-    if (tagNode.textContent?.includes(value)) {
-      tagNode.style.display = 'block';
+    const regex = state.letterFilter;
+    if (
+      tagNode.textContent?.includes(value) &&
+      tagNode.textContent?.match(regex)
+    ) {
+      tagNode.style.removeProperty('display');
     } else {
       tagNode.style.display = 'none';
     }

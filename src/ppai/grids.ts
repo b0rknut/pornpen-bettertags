@@ -27,6 +27,9 @@ export const reflowGrids = () => {
     const contentNode = headerNode.nextSibling as HTMLElement;
     sortChildrenByText(contentNode);
     const children = [...contentNode.children] as HTMLElement[];
+    children.forEach((node) => {
+      node.setAttribute('data-category', headerNode.innerText);
+    });
     state.allTagNodes = [...state.allTagNodes, ...children];
     const numberOfChildren = contentNode.children.length;
 
@@ -75,6 +78,8 @@ export const grids: Injectable<never> = (() => ({
 
     if (!groups.classList.contains('data-injected')) {
       groups.addEventListener('wheel', (evt) => {
+        if (getAppState().isMobile) return;
+
         evt.preventDefault();
         groups.scrollLeft += evt.deltaY;
       });

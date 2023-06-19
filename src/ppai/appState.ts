@@ -10,6 +10,7 @@ export type AppState = {
   lastGeneratedSelectedTags: string[];
   scrollbarSize: number;
   isMobile: boolean;
+  letterFilter: RegExp;
 };
 
 export const initialAppState = (): AppState => ({
@@ -22,6 +23,7 @@ export const initialAppState = (): AppState => ({
   lastGeneratedSelectedTags: [],
   scrollbarSize: 16,
   isMobile: false,
+  letterFilter: /^/,
 });
 
 export const getAppState = (): AppState => {

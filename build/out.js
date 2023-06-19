@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pornpen.ai better tags
 // @namespace    pornpen.ai
-// @version      1.6.1
+// @version      1.7.0
 // @description  better make screen :)
 // @author       b0rknut
 // @match        https://pornpen.ai/*
@@ -18,6 +18,7 @@
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __pow = Math.pow;
   var __commonJS = (cb, mod) => function __require() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
@@ -353,7 +354,8 @@
     authorizationHeader: "",
     lastGeneratedSelectedTags: [],
     scrollbarSize: 16,
-    isMobile: false
+    isMobile: false,
+    letterFilter: /^/
   });
   var getAppState = () => {
     const anyWindow = unsafeWindow;
@@ -519,12 +521,42 @@ ${ON_MOBILE} {
 }
 
 ${ON_MOBILE} {
-    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
-        grid: repeat(6, auto) / auto-flow;
+    *[id^="panel"]:not(:empty) {
+        display: flex;
+        flex-direction: column;
+        margin-right: 2rem;
+        margin-bottom: 6rem;
+        border: none;
+        overflow-x: auto;
+        overflow-y: scroll;
     }
 
-    *[id^="panel"]:not(:empty) {
-        height: 240px;
+    /* tag group */
+    *[id^="panel"] > .mb-4 {
+        display: flex;
+        flex-direction: column;
+        min-width: auto;
+        margin: 0;
+    }
+
+    /* header */
+    .mb-4 > .ml-4.font-bold.text-white {
+        margin: 1px;
+        padding: 0.3rem 0.5rem;
+        background: #FFFFFF33;
+        position: sticky;
+        height: 2rem;
+        left: 0;
+    }
+
+    /* content */
+    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
+        display: block;
+    }
+
+    /* tag */
+    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div {
+        display: inline-block;
     }
 }
 
@@ -534,38 +566,37 @@ ${ON_MOBILE} {
     flex: 1;
 
     border: none;
-    background: #FFFFFF11;
-    border-radius: 0;
+    padding: 0.2rem 0.6rem;
     margin: 1px;
-    padding: 0.3rem 0.5rem;
-
-    color: #FFFFFF88;
-    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    color: #a6a6a6;
+    font-size: 0.7rem;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     max-width: 8rem;
-
-    height: 2rem;
+    background: #FFF1;
+    cursor: pointer;
 
 }
 
+
 /* individual tag: selected */
 .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-green-700 {
-    background: rgb(144 97 249);
-    color: white;
+    background: #cfc074;
+    color: black;
 }
 
 /* individual tag: non-builtin */
 .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.border-purple-500 {
-    background: #FF888822;
+    color: #a69e74;
 }
 
 
 /* individual tag: non-builtin: selected */
 .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-purple-500 {
-    background: rgb(144 97 249);
-    color: white;
+    background: #cfc074;
+    color: black;
 }
 
 /* result image container */
@@ -599,11 +630,22 @@ ${ON_MOBILE} {
     font-size: 0.7rem;
     color: #FFF8;
     display: inline-block;
-    padding: 0.2rem 0.6rem;
     margin: 1px;
-    background-color: rgb(44, 50, 59);
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
+    overflow: hidden;
     cursor: pointer;
+}
+
+.selectedTag .category {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background-color: rgb(80, 50, 59);
+}
+
+.selectedTag .text {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background-color: rgb(44, 50, 59);
 }
 
 
@@ -681,7 +723,7 @@ ${ON_MOBILE} {
 
 ${ON_MOBILE} {
   #categorySelectorContainer {
-    margin-bottom: 3rem;
+    display: none;
   }
 }
 
@@ -964,15 +1006,37 @@ ${ON_MOBILE} {
   };
 
   // src/ppai/renderSmallTag.ts
-  var createSmallTag = (text) => {
+  var createSmallTag = (text, category) => {
     const tagNode = document.createElement("div");
+    if (category) {
+      const categoryNode = document.createElement("span");
+      categoryNode.textContent = category;
+      categoryNode.classList.add("category");
+      tagNode.appendChild(categoryNode);
+    }
+    const textNode = document.createElement("span");
+    textNode.textContent = text;
+    textNode.classList.add("text");
+    tagNode.appendChild(textNode);
     tagNode.classList.add("selectedTag");
-    tagNode.innerText = text;
     return tagNode;
   };
 
   // src/ppai/selectedTags.ts
+  var SINGLE_CHOICE_CATEGORIES = /* @__PURE__ */ new Set([
+    "#\u{1F469}",
+    "Age",
+    "Face",
+    "Hair Style",
+    "View",
+    "Base",
+    "Ethnicity",
+    "Style",
+    "Action",
+    "Setting"
+  ]);
   var renderSelectedTags = (state) => {
+    var _a;
     const container = document.querySelector("#selectedTags");
     if (!container)
       return;
@@ -980,7 +1044,11 @@ ${ON_MOBILE} {
     const selectedTagNodes = getAllSelectedTags(state);
     selectedTagNodes.sort((a, b) => a.innerText.localeCompare(b.innerText));
     for (const tagNode of selectedTagNodes) {
-      const selectedTag = createSmallTag(tagNode.innerText);
+      const category = (_a = tagNode.getAttribute("data-category")) != null ? _a : "";
+      const selectedTag = createSmallTag(
+        tagNode.innerText,
+        SINGLE_CHOICE_CATEGORIES.has(category) ? category : ""
+      );
       selectedTag.addEventListener("click", () => {
         toggleTag(state, selectedTag.innerText);
         renderSelectedTags(state);
@@ -1032,6 +1100,9 @@ ${ON_MOBILE} {
       const contentNode = headerNode.nextSibling;
       sortChildrenByText(contentNode);
       const children = [...contentNode.children];
+      children.forEach((node) => {
+        node.setAttribute("data-category", headerNode.innerText);
+      });
       state.allTagNodes = [...state.allTagNodes, ...children];
       const numberOfChildren = contentNode.children.length;
       if (children.some((child) => child.style.display !== "none")) {
@@ -1072,6 +1143,8 @@ ${ON_MOBILE} {
         return;
       if (!groups.classList.contains("data-injected")) {
         groups.addEventListener("wheel", (evt) => {
+          if (getAppState().isMobile)
+            return;
           evt.preventDefault();
           groups.scrollLeft += evt.deltaY;
         });
@@ -1386,6 +1459,213 @@ ${ON_MOBILE} {
     }
   }))();
 
+  // src/ppai/letterSelector.ts
+  registerStyles(`
+.letterSelectorContainer {
+  width: 2rem;
+  height: 28rem;
+  display: flex;
+  margin: 0 0 0 0;
+  
+  position: fixed;
+  bottom: 4rem;
+  right: 0;
+  user-select: none;
+  z-index: 10000;
+}
+
+.labels {
+  list-style: none;
+  margin: 0;
+  padding: 0 0.1rem;
+  pointer-events: none;
+  color: white;
+}
+
+.labels li {
+  height: 1rem;
+  font-size: 0.8rem;
+  transition: all 0.03s linear;
+  pointer-events: none;
+}
+
+.letterSelector {
+  height: 100%;
+  flex: 1;
+  position: relative;
+}
+
+.letterSelector>*{
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.rangeContainer {
+  display: flex;
+}
+
+.rangeContainer input[type=range] {
+  width: 100%;
+  height: 100%;
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* WebKit */
+  opacity: 0;
+}
+
+.letterContainer {
+  justify-content: center;
+  height: 0rem;
+  width: 0;
+  position: relative;
+}
+
+.letterContainerInner {
+  height: 6rem;
+  bottom: 3rem;
+  width: 2rem;
+  right: 1rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.letter {
+  font-size: 4rem;
+  position: relative;
+  right: 115px;
+  top: 10px;
+  pointer-events: none;
+  color: white;
+  z-index: 10000;
+}
+`);
+  var LETTER_SELECTOR_MARKUP = `
+<div class='letterSelectorContainer'>
+  <div class='letterSelector'>
+    <div class='letterContainer'><div class='letterContainerInner'><div class="letter"></div></div></div>
+    <ol class='labels'>
+      <li>\u{1F6AB}</li>
+      <li>#</li>
+      <li>A</li>
+      <li>B</li>
+      <li>C</li>
+      <li>D</li>
+      <li>E</li>
+      <li>F</li>
+      <li>G</li>
+      <li>H</li>
+      <li>I</li>
+      <li>J</li>
+      <li>K</li>
+      <li>L</li>
+      <li>M</li>
+      <li>N</li>
+      <li>O</li>
+      <li>P</li>
+      <li>Q</li>
+      <li>R</li>
+      <li>S</li>
+      <li>T</li>
+      <li>U</li>
+      <li>V</li>
+      <li>W</li>
+      <li>X</li>
+      <li>Y</li>
+      <li>Z</li>
+    </ol>    
+    <div class='rangeContainer'>
+      <input type="range" value="1" min="0" max="27" step="1" orient="vertical" />
+    </div>
+  </div>
+</div>
+`;
+  var search = (state, value) => {
+    state.allTagNodes.forEach((tagNode) => {
+      var _a, _b;
+      if (((_a = tagNode.textContent) == null ? void 0 : _a.includes(value)) && ((_b = tagNode.textContent) == null ? void 0 : _b.match(state.letterFilter))) {
+        tagNode.style.removeProperty("display");
+      } else {
+        tagNode.style.display = "none";
+      }
+    });
+    forceReinject(grids);
+  };
+  var sigmoid = (x) => {
+    return 1 / (1 + Math.exp(-x));
+  };
+  var calcOffset = (x, i, denom = 4) => {
+    const quadratic = 1 - __pow((x - i) / denom, 2);
+    const smoothQuadratic = sigmoid(2 * (quadratic - 0.2));
+    return Math.max(0, smoothQuadratic);
+  };
+  var letterSelector = (() => ({
+    name: "letterSelector",
+    isInjected: () => !!$(".letterSelectorContainer"),
+    shouldBeInjected: () => true,
+    inject: () => {
+      try {
+        let container = $(".letterSelectorContainer");
+        if (!container) {
+          document.body.insertAdjacentHTML("afterend", LETTER_SELECTOR_MARKUP);
+        }
+        container = $(".letterSelectorContainer");
+        const letter = $(".letter", container);
+        const labels = $(".labels", container).querySelectorAll("li");
+        const letters = "-#ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        const regexes = letters.map((letter2) => new RegExp(`^${letter2}`, "i"));
+        regexes[0] = /^/;
+        regexes[1] = /^[0-9]/;
+        let selectedIndex = 0;
+        let isDragging = 0;
+        const input = $("input", container);
+        input.addEventListener("input", () => {
+          console.log("asdssssssssasd");
+          selectedIndex = 27 - Number(input.value);
+          letter.innerText = letters[selectedIndex];
+          letter.style.transform = `translateY(${selectedIndex}rem)`;
+          labels.forEach((label, i) => {
+            const offset = isDragging * 70 * calcOffset(i, selectedIndex, 4);
+            label.style.transform = `translate(-${offset}px)`;
+          });
+        });
+        const pointerDown = () => {
+          console.log("asdsasd");
+          isDragging = 1;
+          labels.forEach((label, i) => {
+            label.style.transition = `all 0.03s linear`;
+            const offset = isDragging * 70 * calcOffset(i, selectedIndex, 4);
+            label.style.transform = `translate(-${offset}px)`;
+          });
+          letter.style.display = "block";
+        };
+        const pointerUp = () => {
+          var _a, _b;
+          isDragging = 0;
+          labels.forEach((label, i) => {
+            label.style.transition = `all 0.08s ease-out`;
+            label.style.transform = `translate(0px)`;
+          });
+          letter.style.display = "none";
+          getAppState().letterFilter = regexes[selectedIndex];
+          search(getAppState(), (_b = (_a = $(".searchBar")) == null ? void 0 : _a.value) != null ? _b : "");
+        };
+        input.addEventListener("touchstart", pointerDown);
+        input.addEventListener("mousedown", pointerDown);
+        input.addEventListener("touchend", pointerUp);
+        input.addEventListener("mouseup", pointerUp);
+      } catch (e) {
+      }
+    },
+    uninject: () => {
+    },
+    updateData: () => {
+    }
+  }))();
+
   // src/ppai/popperjs.ts
   var popperjs = (() => ({
     name: "popper.js",
@@ -1419,15 +1699,29 @@ ${ON_MOBILE} {
 
   // src/ppai/searchBar.ts
   var SEARCHBAR_MARKUP = `
-<div id="searchBarContainer" style="display: flex; width:100%">
+<div id="searchBarContainer">
     <input class="searchBar" placeholder="Search..." style="color:white; background: #FFF1; border: 1px solid #FFF2; flex-grow: 1; margin:0; padding:0.5rem; border-top-left-radius:0.5rem;"/><button style="background-color: #FFF1; border: 1px solid #FFF2; border-left: none; border-top-right-radius:0.5rem; padding:0.5rem 0.8rem;">\u274C</button>
 </div>
 `;
-  var search = (state, value) => {
+  registerStyles(`
+  /* searchBar */
+  #searchBarContainer {
+    width: 100%;
+    display: flex;
+  }
+
+  ${ON_MOBILE} {
+    #searchBarContainer {
+      display: none;
+    }
+  }
+`);
+  var search2 = (state, value) => {
     state.allTagNodes.forEach((tagNode) => {
-      var _a;
-      if ((_a = tagNode.textContent) == null ? void 0 : _a.includes(value)) {
-        tagNode.style.display = "block";
+      var _a, _b;
+      const regex = state.letterFilter;
+      if (((_a = tagNode.textContent) == null ? void 0 : _a.includes(value)) && ((_b = tagNode.textContent) == null ? void 0 : _b.match(regex))) {
+        tagNode.style.removeProperty("display");
       } else {
         tagNode.style.display = "none";
       }
@@ -1452,7 +1746,7 @@ ${ON_MOBILE} {
         (_a = tablist == null ? void 0 : tablist.parentNode) == null ? void 0 : _a.insertBefore(toolsContainer, tablist);
         (_b = tablist == null ? void 0 : tablist.parentNode) == null ? void 0 : _b.removeChild(tablist);
         searchBar2.addEventListener("input", () => {
-          search(state, searchBar2.value);
+          search2(state, searchBar2.value);
         });
         searchBar2.addEventListener("keydown", (evt) => {
           if (evt.key === "Enter") {
@@ -1461,7 +1755,7 @@ ${ON_MOBILE} {
         });
         deleteButton.addEventListener("click", () => {
           searchBar2.value = "";
-          search(state, "");
+          search2(state, "");
         });
       } catch (e) {
       }
@@ -1898,7 +2192,8 @@ ${ON_MOBILE} {
       imageListener,
       categorySelector,
       imageTags,
-      gradientButtonListener
+      gradientButtonListener,
+      letterSelector
     ].forEach(registerInjectable);
     startInjectableObserver();
   })();

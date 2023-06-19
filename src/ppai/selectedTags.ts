@@ -5,6 +5,19 @@ import { AppState, getAppState } from './appState';
 import { createSmallTag } from './renderSmallTag';
 import { getAllSelectedTags, toggleTag } from './tag';
 
+const SINGLE_CHOICE_CATEGORIES = new Set([
+  '#👩',
+  'Age',
+  'Face',
+  'Hair Style',
+  'View',
+  'Base',
+  'Ethnicity',
+  'Style',
+  'Action',
+  'Setting',
+]);
+
 export const renderSelectedTags = (state: AppState) => {
   const container = document.querySelector('#selectedTags');
   if (!container) return;
@@ -15,7 +28,11 @@ export const renderSelectedTags = (state: AppState) => {
   selectedTagNodes.sort((a, b) => a.innerText.localeCompare(b.innerText));
 
   for (const tagNode of selectedTagNodes) {
-    const selectedTag = createSmallTag(tagNode.innerText);
+    const category = tagNode.getAttribute('data-category') ?? '';
+    const selectedTag = createSmallTag(
+      tagNode.innerText,
+      SINGLE_CHOICE_CATEGORIES.has(category) ? category : '',
+    );
     selectedTag.addEventListener('click', () => {
       toggleTag(state, selectedTag.innerText);
       renderSelectedTags(state);

@@ -9,6 +9,7 @@ import { gradientButtonListener } from './ppai/gradientButtonListener';
 import { grids } from './ppai/grids';
 import { imageListener } from './ppai/imageListener';
 import { imageTags } from './ppai/imageTags';
+import { letterSelector } from './ppai/letterSelector';
 import { popperjs } from './ppai/popperjs';
 import { renamedHeaders } from './ppai/renamedHeaders';
 import { searchBar } from './ppai/searchBar';
@@ -74,6 +75,7 @@ import LZString from './util/lzstring';
     categorySelector,
     imageTags,
     gradientButtonListener,
+    letterSelector,
   ].forEach(registerInjectable);
   startInjectableObserver();
 })();

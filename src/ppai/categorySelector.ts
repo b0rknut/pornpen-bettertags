@@ -13,7 +13,7 @@ registerStyles(`
 
 ${ON_MOBILE} {
   #categorySelectorContainer {
-    margin-bottom: 3rem;
+    display: none;
   }
 }
 

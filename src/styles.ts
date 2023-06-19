@@ -159,12 +159,42 @@ ${ON_MOBILE} {
 }
 
 ${ON_MOBILE} {
-    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
-        grid: repeat(6, auto) / auto-flow;
+    *[id^="panel"]:not(:empty) {
+        display: flex;
+        flex-direction: column;
+        margin-right: 2rem;
+        margin-bottom: 6rem;
+        border: none;
+        overflow-x: auto;
+        overflow-y: scroll;
     }
 
-    *[id^="panel"]:not(:empty) {
-        height: 240px;
+    /* tag group */
+    *[id^="panel"] > .mb-4 {
+        display: flex;
+        flex-direction: column;
+        min-width: auto;
+        margin: 0;
+    }
+
+    /* header */
+    .mb-4 > .ml-4.font-bold.text-white {
+        margin: 1px;
+        padding: 0.3rem 0.5rem;
+        background: #FFFFFF33;
+        position: sticky;
+        height: 2rem;
+        left: 0;
+    }
+
+    /* content */
+    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
+        display: block;
+    }
+
+    /* tag */
+    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div {
+        display: inline-block;
     }
 }
 
@@ -174,38 +204,37 @@ ${ON_MOBILE} {
     flex: 1;
 
     border: none;
-    background: #FFFFFF11;
-    border-radius: 0;
+    padding: 0.2rem 0.6rem;
     margin: 1px;
-    padding: 0.3rem 0.5rem;
-
-    color: #FFFFFF88;
-    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    color: #a6a6a6;
+    font-size: 0.7rem;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     max-width: 8rem;
-
-    height: 2rem;
+    background: #FFF1;
+    cursor: pointer;
 
 }
 
+
 /* individual tag: selected */
 .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-green-700 {
-    background: rgb(144 97 249);
-    color: white;
+    background: #cfc074;
+    color: black;
 }
 
 /* individual tag: non-builtin */
 .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.border-purple-500 {
-    background: #FF888822;
+    color: #a69e74;
 }
 
 
 /* individual tag: non-builtin: selected */
 .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-purple-500 {
-    background: rgb(144 97 249);
-    color: white;
+    background: #cfc074;
+    color: black;
 }
 
 /* result image container */
@@ -239,11 +268,22 @@ ${ON_MOBILE} {
     font-size: 0.7rem;
     color: #FFF8;
     display: inline-block;
-    padding: 0.2rem 0.6rem;
     margin: 1px;
-    background-color: rgb(44, 50, 59);
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
+    overflow: hidden;
     cursor: pointer;
+}
+
+.selectedTag .category {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background-color: rgb(80, 50, 59);
+}
+
+.selectedTag .text {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background-color: rgb(44, 50, 59);
 }
 
 

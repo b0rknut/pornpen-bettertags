@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pornpen.ai better tags
 // @namespace    pornpen.ai
-// @version      1.7.0
+// @version      1.7.1
 // @description  better make screen :)
 // @author       b0rknut
 // @match        https://pornpen.ai/*
@@ -529,6 +529,7 @@ ${ON_MOBILE} {
         border: none;
         overflow-x: auto;
         overflow-y: scroll;
+        height: max-content;
     }
 
     /* tag group */

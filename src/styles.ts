@@ -167,6 +167,7 @@ ${ON_MOBILE} {
         border: none;
         overflow-x: auto;
         overflow-y: scroll;
+        height: max-content;
     }
 
     /* tag group */

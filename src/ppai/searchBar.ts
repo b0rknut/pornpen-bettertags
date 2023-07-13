@@ -1,9 +1,9 @@
-import { ON_MOBILE, TABLIST_SELECTOR, registerStyles } from '../styles';
+import { COLORS, ON_MOBILE, TABLIST_SELECTOR, registerStyles } from '../styles';
 import { Injectable, forceReinject } from '../util/dom/injectable';
 import { $ } from '../util/dom/querySelector';
 import { AppState, getAppState } from './appState';
-import { grids } from './grids';
 import { toggleFirstTagThatIsNotHidden } from './tag';
+import { collectAllTags } from './tagCollector';
 
 export type TooltipInfo = {
   image: string;
@@ -15,16 +15,18 @@ export type TooltipInfo = {
 };
 
 const SEARCHBAR_MARKUP = `
-<div id="searchBarContainer">
-    <input class="searchBar" placeholder="Search..." style="color:white; background: #FFF1; border: 1px solid #FFF2; flex-grow: 1; margin:0; padding:0.5rem; border-top-left-radius:0.5rem;"/><button style="background-color: #FFF1; border: 1px solid #FFF2; border-left: none; border-top-right-radius:0.5rem; padding:0.5rem 0.8rem;">❌</button>
-</div>
+    <input class="searchBar" placeholder="Search..." style="color:white; background: #FFF1; border-right: 1px solid ${COLORS.gray200}; flex-grow: 1; margin:0; padding:0.5rem;"/><button style="background-color: #FFF1; padding:0.5rem 0.8rem;">❌</button>
 `;
 
 registerStyles(`
   /* searchBar */
   #searchBarContainer {
+    border: 1px solid #fff8;
     width: 100%;
+    height: 3rem;
     display: flex;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 
   ${ON_MOBILE} {
@@ -46,7 +48,7 @@ export const search = (state: AppState, value: string) => {
       tagNode.style.display = 'none';
     }
   });
-  forceReinject(grids);
+  collectAllTags();
 };
 
 export const searchBar: Injectable<never> = (() => ({
@@ -61,12 +63,13 @@ export const searchBar: Injectable<never> = (() => ({
 
       const state = getAppState();
 
-      const toolsContainer = document.createElement('div');
-      toolsContainer.innerHTML = SEARCHBAR_MARKUP;
-      const searchBar = $<HTMLInputElement>('.searchBar', toolsContainer);
-      const deleteButton = $('button', toolsContainer);
+      const searchbarContainer = document.createElement('div');
+      searchbarContainer.id = 'searchBarContainer';
+      searchbarContainer.innerHTML = SEARCHBAR_MARKUP;
+      const searchBar = $<HTMLInputElement>('.searchBar', searchbarContainer);
+      const deleteButton = $('button', searchbarContainer);
 
-      tablist?.parentNode?.insertBefore(toolsContainer, tablist);
+      tablist?.parentNode?.insertBefore(searchbarContainer, tablist);
       tablist?.parentNode?.removeChild(tablist);
 
       searchBar.addEventListener('input', () => {

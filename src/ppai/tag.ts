@@ -1,5 +1,4 @@
 import { USER_DEFINED_TAGS_SELECTOR } from '../styles';
-import LZString from '../util/lzstring';
 import { AppState } from './appState';
 
 export type TagInfo = {
@@ -69,7 +68,9 @@ export const getAmountOfUserDefinedTags = () => {
   return document.querySelectorAll(USER_DEFINED_TAGS_SELECTOR).length;
 };
 
+/*
 export const parseTagsString = (tagsString: string) => {
   // new URLSearchParams(LZString.decompressFromEncodedURIComponent(new URLSearchParams(new URL(window.location.href).search).get("tags")))
   const decoded = LZString.decompressFromEncodedURIComponent(tagsString);
 };
+*/

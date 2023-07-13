@@ -11,6 +11,37 @@ export const ON_MOBILE = '@media screen and (max-width: 768px)';
 export const COLORS = {
   ui: 'rgb(12, 18, 29)',
   uiLight: 'rgb(67, 73, 85)',
+
+  ocre50: '#15130c',
+  ocre100: '#292617',
+  ocre200: '#534d2e',
+  ocre300: '#7c7346',
+  ocre400: '#a69a5d',
+  ocre500: '#cfc074',
+  ocre600: '#d9cd90',
+  ocre700: '#e2d9ac',
+  ocre800: '#ece6c7',
+  ocre900: '#f5f2e3',
+
+  gray100: '#101010',
+  gray200: '#303030',
+  gray300: '#616161',
+  gray400: '#818181',
+  gray500: '#a1a1a1',
+  gray600: '#b4b4b4',
+  gray700: '#c7c7c7',
+  gray800: '#d9d9d9',
+  gray900: '#ececec',
+
+  salmon100: '#291a17',
+  salmon200: '#53342e',
+  salmon300: '#7c4e44',
+  salmon400: '#a6685b',
+  salmon500: '#cf8272',
+  salmon600: '#d99b8e',
+  salmon700: '#e2b4aa',
+  salmon800: '#eccdc7',
+  salmon900: '#f5e6e3',
 };
 
 export let styles = `
@@ -22,6 +53,32 @@ img {
     border-radius: 0.5rem;
 }
 
+/* so all the ui controls are in one line */
+.flex.flex-col-reverse.min-h-screen > .grow.px-4 {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: calc(100% - 512px);
+}
+
+.flex.flex-col-reverse.min-h-screen {
+    align-items: flex-start;
+}
+
+.flex.flex-col-reverse.min-h-screen > .grow.px-4 > * {
+    height: min-content;
+}
+
+
+/* where search bar and tags are located */
+.grow.px-4 > .flex.flex-col.items-start.text-white {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+
+.flex.flex-col-reverse.min-h-screen > .grow.px-4 button, .flex.flex-col-reverse.min-h-screen > .grow.px-4 select {
+    height: 3rem;
+}
 ${ON_MOBILE} {
     img {
         border-radius: 0;
@@ -46,25 +103,6 @@ ${ON_MOBILE} {
     }
 }
 
-*::-webkit-scrollbar {
-    background-color: #0000;
-}
-
-*::-webkit-scrollbar-thumb {
-    background-color: #FFF2;
-    border: 2px solid #0000;
-}
-
-/* some dumb container that has min-h-screen on it */
-.flex.flex-col-reverse.min-h-screen {
-    min-height: 0;
-}
-
-/* where all the ui items are in */
-.flex.flex-col.items-start.text-white {
-    display: block;
-}
-
 ${ON_MOBILE} {
     .flex.flex-col-reverse.min-h-screen > .grow.px-4 {
         padding: 0;
@@ -81,10 +119,25 @@ ${ON_MOBILE} {
     }
 }
 
+/* container for everything */
+div[class="w-full md:w-10/12"] {
+    position: relative;
+}
+
+/* where the resulting images are */
+div[class="w-full md:w-fit md:flex-none md:min-w-[512px]"] {
+    position: absolute;
+    right: 0;
+    height: 100%;
+}
+
 /* where the main images are located */
 ${ON_MOBILE} {
-    *[class="w-full md:w-fit md:flex-none md:min-w-[512px]"] {
+    div[class="w-full md:w-fit md:flex-none md:min-w-[512px]"] {
         margin-top: 7rem; /* 3rem top bar, 4 rem generatedImages */
+        position: static;
+        height: auto;
+        right: auto;
     }
 
     /* some weird container inside */
@@ -93,149 +146,54 @@ ${ON_MOBILE} {
     }
 }
 
-/* clear tags and copy tags */
-.flex.flex-col-reverse.min-h-screen > .grow.px-4 > div:nth-child(2) {
-    display: inline-block;
-    margin-left: 0.5rem;
-}
-
 *[id^="panel"]:not(:empty) {
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    border: 1px solid #FFF2;
-    border-top: none;
-    background: #0004;
-    padding: 1rem;
-    box-sizing: content-box;
-    height: 444px;
-}
-
-/* main content container */
-*[class="w-full md:w-10/12"] {
-    max-width: 100rem;
-}
-
-@media only screen and (min-width: 768px) {
-    /* the div inside the main content container */
-    *[class="w-full md:w-10/12"] > .flex.flex-col-reverse.min-h-screen {
-        display: grid;
-        grid: auto-flow / minmax(0, 1fr) max-content;
-    }
-}
-
-/* where the search bar and tag list are */
-.flex.flex-col.items-start.text-white {
-    display: block;
+    flex-wrap: wrap;
 }
 
 /* tag group */
-*[id^="panel"] > .mb-4 {
-    display: inline-block;
+*[id^="panel"]:not(:empty) .mb-4 {
+    margin: 1px;
+    width: fit-content;
+    border: 1px solid #fff8;
     border-radius: 0.5rem;
-    vertical-align: top;
-    min-width: max-content;
-    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 /* tag group header */
 .mb-4 > .ml-4.font-bold.text-white {
+    padding: 0.5rem 1rem;
+    background: #fff2;
+    border-bottom: 1px solid #fff8;
+    flex-grow: 1;
+    margin-left: 0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: lighter;
+    letter-spacing: 0.1rem;
+}
+
+/* tag list */
+.mb-4 > .flex.col.flex-wrap {
+    padding: 1rem;
+    width: fit-content;
+    background: #0002;
+}
+
+/* tag */
+.text-base.px-4.py-2.m-2.border.rounded-lg, .flex.justify-center.items-center.px-4.py-2.rounded-md  {
+    border-radius: 0;
     margin: 1px;
-    padding: 0.3rem 0.5rem;
-    background: #FFFFFF33;
-    position: sticky;
-    left: 0;
+    padding: 0.2rem 0.8rem;
+    font-size: 0.75rem;
+    border: 1px solid #fff4 !important;
+    color: #fffA !important;
 }
 
-.mb-4 > .ml-4.font-bold.text-white+.ml-4.text-white {
-    display: none;
-}
-
-/* tag group content */
-.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
-    display: grid;
-    grid: repeat(12, auto) / auto-flow;
-}
-
-${ON_MOBILE} {
-    *[id^="panel"]:not(:empty) {
-        display: flex;
-        flex-direction: column;
-        margin-right: 2rem;
-        margin-bottom: 6rem;
-        border: none;
-        overflow-x: auto;
-        overflow-y: scroll;
-        height: max-content;
-    }
-
-    /* tag group */
-    *[id^="panel"] > .mb-4 {
-        display: flex;
-        flex-direction: column;
-        min-width: auto;
-        margin: 0;
-    }
-
-    /* header */
-    .mb-4 > .ml-4.font-bold.text-white {
-        margin: 1px;
-        padding: 0.3rem 0.5rem;
-        background: #FFFFFF33;
-        position: sticky;
-        height: 2rem;
-        left: 0;
-    }
-
-    /* content */
-    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap {
-        display: block;
-    }
-
-    /* tag */
-    .mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div {
-        display: inline-block;
-    }
-}
-
-/* individual tag */
-.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div {
-
-    flex: 1;
-
-    border: none;
-    padding: 0.2rem 0.6rem;
-    margin: 1px;
-    border-radius: 0.25rem;
-    color: #a6a6a6;
-    font-size: 0.7rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 8rem;
-    background: #FFF1;
-    cursor: pointer;
-
-}
-
-
-/* individual tag: selected */
-.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-green-700 {
-    background: #cfc074;
-    color: black;
-}
-
-/* individual tag: non-builtin */
-.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.border-purple-500 {
-    color: #a69e74;
-}
-
-
-/* individual tag: non-builtin: selected */
-.mb-4 > .ml-4.font-bold.text-white ~ .flex.col.flex-wrap > div.bg-purple-500 {
-    background: #cfc074;
-    color: black;
+.text-base.px-4.py-2.m-2.border.rounded-lg.border-purple-500 {
+    border: 1px solid #faf5 !important;
 }
 
 /* result image container */
@@ -250,49 +208,12 @@ ${ON_MOBILE} {
   padding: 1rem;
 }
 
-
-
-/* selectedTags */
-#selectedTagsContainer {
-    border: 1px solid #FFF2;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    overflow: hidden;
-}
-
-#selectedTags {
+/* selected tags */
+.ml-2.mb-2.flex.flex-wrap.bg-slate-800.pt-2.pl-2.rounded-lg {
+    width: 100%;
+    margin: 0;
     padding: 1rem;
-    background-color: #0004;
-}
-
-.selectedTag {
-    font-size: 0.7rem;
-    color: #FFF8;
-    display: inline-block;
-    margin: 1px;
-    border-radius: 0.25rem;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.selectedTag .category {
-    display: inline-block;
-    padding: 0.2rem 0.6rem;
-    background-color: rgb(80, 50, 59);
-}
-
-.selectedTag .text {
-    display: inline-block;
-    padding: 0.2rem 0.6rem;
-    background-color: rgb(44, 50, 59);
-}
-
-
-/* generic ui */
-.genericUiElement {
-    border: 1px solid #FFF2;
-    border-radius: 0.5rem;
-    overflow: hidden;
+    border: 1px solid #fff8;
     background: #0002;
 }
 
@@ -317,12 +238,11 @@ ${ON_MOBILE} {
 /* image tags */
 .imageTags {
     padding: 1rem;
-    border-top: 1px solid #FFF2;
-    background: #0002;
+    border-top: 1px solid ${COLORS.gray200};
+    background: ${COLORS.gray100};
     width: min-content;
     min-width: 100%;
 }
-
 `;
 
 export const registerStyles = (style: string) => {

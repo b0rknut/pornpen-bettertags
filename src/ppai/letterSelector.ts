@@ -1,8 +1,8 @@
 import { registerStyles } from '../styles';
-import { Injectable, forceReinject } from '../util/dom/injectable';
+import { Injectable } from '../util/dom/injectable';
 import { $ } from '../util/dom/querySelector';
-import { AppState, getAppState } from './appState';
-import { grids } from './grids';
+import { getAppState } from './appState';
+import { search } from './searchBar';
 
 export type TooltipInfo = {
   image: string;
@@ -138,20 +138,6 @@ const LETTER_SELECTOR_MARKUP = `
 </div>
 `;
 
-export const search = (state: AppState, value: string) => {
-  state.allTagNodes.forEach((tagNode) => {
-    if (
-      tagNode.textContent?.includes(value) &&
-      tagNode.textContent?.match(state.letterFilter)
-    ) {
-      tagNode.style.removeProperty('display');
-    } else {
-      tagNode.style.display = 'none';
-    }
-  });
-  forceReinject(grids);
-};
-
 const sigmoid = (x: number) => {
   return 1 / (1 + Math.exp(-x));
 };
@@ -190,7 +176,6 @@ export const letterSelector: Injectable<never> = (() => ({
       const input = $<HTMLInputElement>('input', container);
 
       input.addEventListener('input', () => {
-        console.log('asdssssssssasd');
         selectedIndex = 27 - Number(input.value);
         letter.innerText = letters[selectedIndex];
         letter.style.transform = `translateY(${selectedIndex}rem)`;
@@ -202,7 +187,6 @@ export const letterSelector: Injectable<never> = (() => ({
       });
 
       const pointerDown = () => {
-        console.log('asdsasd');
         isDragging = 1;
         labels.forEach((label, i) => {
           label.style.transition = `all 0.03s linear`;

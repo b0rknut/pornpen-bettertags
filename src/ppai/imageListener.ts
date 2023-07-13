@@ -3,7 +3,6 @@ import { Injectable } from '../util/dom/injectable';
 import { queryAndDeleteAll } from '../util/dom/markup';
 import { $, $$ } from '../util/dom/querySelector';
 import { getAppState } from './appState';
-import { imageTags, setImageTags } from './imageTags';
 
 type GeneratedImageData = {
   id: string;
@@ -12,6 +11,9 @@ type GeneratedImageData = {
 
 export const A_TAG_SELECTOR =
   '.w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/view/"], .w-full>.flex.flex-col.overflow-auto.mb-8.justify-center a[href^="/private/"]';
+
+export const SELECTED_TAGS_SELECTOR =
+  '.ml-2.mb-2.flex.flex-wrap.bg-slate-800.pt-2.pl-2.rounded-lg';
 
 const render = () => {
   const container = $('#generatedImages');
@@ -28,7 +30,6 @@ const render = () => {
       if (!linkNode) return;
       linkNode.setAttribute('href', `/${image.id}`);
       linkNode.querySelector('img')?.setAttribute('src', image.url);
-      imageTags.updateData(image.id);
     });
 
     container.appendChild(imageNode);
@@ -42,24 +43,24 @@ registerStyles(`
 }
 
 /* imageListener */
-#generatedImageContainer {
-    border: 1px solid #FFF2;
+#generatedImages {
+    border: 1px solid #fff8;
     border-radius: 0.5rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    background-color: ${COLORS.ui};
+    margin: 0.5rem 0;
+    background-color: #0002;
     font-size: 0.75rem;
     color: #FFF8;
-}
-
-#generatedImages {
+    width: 100%;
     padding: 0.75rem;
-    background-color: ${COLORS.ui};
     flex-grow: 1;
     min-height: 104px;
     max-height: 25rem;
     overflow-y: scroll;
     box-sizing: content-box;
+}
+
+#generatedImages:empty {
+    display: none;
 }
 
 #generatedImagesMain {
@@ -69,12 +70,7 @@ registerStyles(`
 #generatedImagesMain li {
     padding: 0.3rem 0.7rem;
     cursor: pointer;
-    border-bottom: 1px solid #FFF2;
-}
-
-#generatedImagesLeft {
-    flex-shrink: 0;
-    border-right: 1px solid #FFF2;
+    border-bottom: 1px solid ${COLORS.gray200};
 }
 
 .generatedImage {
@@ -90,7 +86,7 @@ registerStyles(`
 }
 
 ${ON_MOBILE} {
-  #generatedImageContainer {
+  #generatedImages {
     margin-bottom: 0rem;
     margin-top: 0rem;
     position: fixed;
@@ -98,13 +94,9 @@ ${ON_MOBILE} {
     width: 100vw;
     border-radius: 0;
     z-index: 100;
-  }
-
-  #generatedImages {
     padding: 0rem;
     min-height: 4rem;
     display: flex; 
-    background-color: ${COLORS.ui};
   }
   
   .generatedImage {
@@ -142,18 +134,6 @@ ${ON_MOBILE} {
 
 `);
 
-const GENERATED_IMAGES_MARKUP = `
-<div id="generatedImagesHeader"></div>
-<div id="generatedImagesMain">
-  <div id="generatedImagesLeft" class="desktop-only">
-    <ul>
-      <li>Active Session</li>
-    </ul>
-  </div>
-  <div id="generatedImages"></div>
-</div>
-`;
-
 let generatedImages = new Map<string, GeneratedImageData>();
 export const imageListener: Injectable<never> = (() => ({
   name: 'imageListener',
@@ -163,7 +143,6 @@ export const imageListener: Injectable<never> = (() => ({
     const images = $$(A_TAG_SELECTOR);
     let updateNecessary = false;
     for (const imageContainer of images) {
-      imageContainer.parentElement?.classList.add('genericUiElement');
       const id = imageContainer
         .getAttribute('href')
         ?.split('/')
@@ -189,7 +168,6 @@ export const imageListener: Injectable<never> = (() => ({
       if (!id || !imageUrl) continue;
       if (!generatedImages.has(id)) {
         generatedImages.set(id, { id, url: imageUrl });
-        setImageTags(id, getAppState().lastGeneratedSelectedTags);
         updateNecessary = true;
       }
     }
@@ -197,17 +175,18 @@ export const imageListener: Injectable<never> = (() => ({
       render();
     }
 
-    return !!$('#generatedImageContainer');
+    return !!$('#generatedImages');
   },
   shouldBeInjected: () => !!window.location.href.match(/make/),
   inject: () => {
     const container = document.createElement('div');
-    container.id = 'generatedImageContainer';
-    container.innerHTML = GENERATED_IMAGES_MARKUP;
-    $(PANEL_SELECTOR).parentNode?.appendChild(container);
+    container.id = 'generatedImages';
+
+    const selectedTags = $(SELECTED_TAGS_SELECTOR);
+    selectedTags.parentNode?.insertBefore(container, selectedTags);
   },
   uninject: () => {
-    queryAndDeleteAll('#generatedImageContainer');
+    queryAndDeleteAll('#generatedImages');
     generatedImages = new Map<string, GeneratedImageData>();
   },
   updateData: () => {},
